@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZR_BIRAP_ATRAV'
+@MappingRole: true
+define role ZR_BIRAP_ATRAV {
+  grant select on ZR_BIRAP_ATRAV
+  where TRUE;
+}

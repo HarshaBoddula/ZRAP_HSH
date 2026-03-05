@@ -1,0 +1,28 @@
+@Metadata.layer: #CORE
+@UI.chart: [{
+    qualifier: 'bookingFeeByStatus',
+    chartType: #COLUMN,
+    description: 'Booking Fee by Status',
+    dimensions: ['OverallStatus'],
+    measures:   ['BookingFeeSum'],
+    dimensionAttributes: [{ dimension: 'OverallStatus', role: #CATEGORY }],
+    measureAttributes:   [{ measure: 'BookingFeeSum',  role: #AXIS_1 }]
+  }]
+
+  @UI.presentationVariant: [{
+    qualifier: 'bookingFeeByStatusPV',
+    visualizations: [{ type: #AS_CHART, qualifier: 'bookingFeeByStatus' }]
+  }]
+
+annotate view ZC_BIRAP_ATRAV_OVP with
+{
+  
+  @UI.dataPoint: {
+    qualifier: 'bookingFeeSumDP',
+    title: 'Booking Fee'
+//    value: 'BookingFeeSum'
+  }
+  BookingFeeSum;
+
+//  OverallStatus;
+}

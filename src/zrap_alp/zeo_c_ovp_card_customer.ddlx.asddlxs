@@ -1,0 +1,21 @@
+@Metadata.layer: #CORE
+@UI.chart: [{ 
+    qualifier: 'visualCustomer',
+    chartType: #DONUT,
+    description: 'Customer - Bookings',
+    dimensions: [ 'customer_name' ],
+    measures: [ 'flight_price' ],
+    dimensionAttributes: [{ dimension: 'customer_name', role: #SERIES }],
+    measureAttributes: [{ measure: 'flight_price', role: #AXIS_1 }]
+ }]
+annotate entity ZEO_C_OVP_card_Customer
+    with 
+{
+    @EndUserText.label: 'Customer'
+    customer_name;
+    
+    @UI.kpi: [{ detail: { defaultPresentationVariantQualifier: 'visualCustomer' } }]
+    @EndUserText.label: 'Total Flight Price'
+    flight_price;
+    
+}

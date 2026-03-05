@@ -1,0 +1,48 @@
+@Metadata.layer: #CORE
+@UI.chart: [{ 
+    qualifier: 'visualCustomer',
+    chartType: #DONUT,
+    description: 'Customer - Bookings',
+    dimensions: [ 'customer_name' ],
+    measures: [ 'flight_price' ],
+    dimensionAttributes: [{ dimension: 'customer_name', role: #SERIES }],
+    measureAttributes: [{ measure: 'flight_price', role: #AXIS_1 }]
+ }]
+ @UI.presentationVariant: [{ 
+//The qualifier name inside Visualizations have to be same as that give for @UI.chart...and the other main qualifier
+//  has to be maintained in the manifest.json file under Settings under pages
+qualifier: 'Default', visualizations: [{type: #AS_CHART, qualifier: 'visualCustomer' }]
+} ]
+annotate entity ZEO_C_OVP
+    with 
+{
+    @UI.selectionField: [{ position: 10 }]
+    @UI.lineItem: [{ position: 10 }]
+    @EndUserText.label: 'Travel ID'
+    TravelId;
+    @UI.selectionField: [{ position: 20 }]
+    @UI.lineItem: [{ position: 20 }]
+    @EndUserText.label: 'Booking ID'
+    BookingId;
+    @UI.selectionField: [{ position: 30 }]
+    @UI.lineItem: [{ position: 30 }]
+    @EndUserText.label: 'Customer ID'
+    CustomerId;
+    @UI.selectionField: [{ position: 40 }]
+    @UI.lineItem: [{ position: 40 }]
+    @EndUserText.label: 'Carrier ID'
+    CarrierId;
+    @UI.selectionField: [{ position: 50 }]
+    @UI.lineItem: [{ position: 50 }]
+    @EndUserText.label: 'Connection ID'
+    ConnectionId;
+    @UI.selectionField: [{ position: 31 }]
+    @UI.lineItem: [{ position: 31 }]
+    @EndUserText.label: 'Customer'
+    customer_name;
+    
+    @UI.kpi: [{ detail: { defaultPresentationVariantQualifier: 'visualCustomer' } }]
+    @EndUserText.label: 'Total Flight Price'
+    flight_price;
+    
+}

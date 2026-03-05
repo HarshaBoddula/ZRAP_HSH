@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZC_BIRAP_ATRAV'
+@MappingRole: true
+define role ZC_BIRAP_ATRAV {
+  grant select on ZC_BIRAP_ATRAV
+  where INHERITING CONDITIONS FROM ENTITY ZR_BIRAP_ATRAV REPLACING { ROOT WITH _BaseEntity };
+}

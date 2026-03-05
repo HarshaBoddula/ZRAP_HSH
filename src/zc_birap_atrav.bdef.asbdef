@@ -1,0 +1,27 @@
+projection implementation in class ZBP_C_BIRAP_ATRAV unique;
+strict ( 2 );
+extensible;
+use draft;
+use side effects;
+define behavior for ZC_BIRAP_ATRAV alias ZcBirapAtrav
+extensible
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  use action deductDiscount;
+  use action defaultDiscount;
+  use action copyTravel;
+  use action createTravel;
+  use action acceptTravel;
+  use action rejectTravel;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+}

@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZEO_OVP'
+define service ZEO_OVP {
+  expose ZEO_C_OVP               as FilterBar;
+  expose ZEO_C_OVP_card_Customer as CustomerCard;
+  expose ZEO_OVP_TABLE_AGENCY    as CarrierTableCard;
+}

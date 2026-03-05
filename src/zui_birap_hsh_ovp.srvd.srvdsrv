@@ -1,0 +1,5 @@
+@EndUserText.label: 'ZUI_BIRAP_HSH_OVP'
+define service ZUI_BIRAP_HSH_OVP {
+  expose ZC_BIRAP_ATRAV_OVP;
+  expose ZR_BIRAP_ATRAV;
+}

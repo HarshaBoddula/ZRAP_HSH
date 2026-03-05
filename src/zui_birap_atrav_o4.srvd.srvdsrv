@@ -1,0 +1,11 @@
+@EndUserText: {
+  label: 'Service Definition for ZC_BIRAP_ATRAV'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZC_BIRAP_ATRAV'
+  }
+}
+define service ZUI_BIRAP_ATRAV_O4 provider contracts odata_v4_ui {
+  expose ZC_BIRAP_ATRAV;
+}

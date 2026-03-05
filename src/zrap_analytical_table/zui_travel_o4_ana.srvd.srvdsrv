@@ -1,0 +1,12 @@
+@EndUserText: {
+  label: 'Service Definition for Travel'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZC_TRAVEL_ANA'
+  }
+}
+define service ZUI_TRAVEL_O4_ANA
+  provider contracts odata_v4_ui {
+  expose ZC_Travel_ANA as Travel;
+}

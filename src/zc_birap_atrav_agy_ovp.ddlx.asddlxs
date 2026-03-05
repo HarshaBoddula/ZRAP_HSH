@@ -1,0 +1,27 @@
+@Metadata.layer: #CORE
+  @UI.chart: [{
+    qualifier: 'totalPriceByAgency',
+    chartType: #BAR,
+    description: 'Total Price by Agency',
+    dimensions: ['AgencyID'],
+    measures: ['TotalPriceSum'],
+    dimensionAttributes: [{ dimension: 'AgencyID', role: #CATEGORY }],
+    measureAttributes: [{ measure: 'TotalPriceSum', role: #AXIS_1 }]
+  }]
+
+  @UI.presentationVariant: [{
+    qualifier: 'totalPriceByAgencyPV',
+    visualizations: [{ type: #AS_CHART, qualifier: 'totalPriceByAgency' }]
+  }]
+annotate view ZC_BIRAP_ATRAV_AGY_OVP with
+{
+
+
+  @UI.dataPoint: {
+    qualifier: 'totalPriceSumDP',
+    title: 'Total Price'
+//    value: 'TotalPriceSum'
+  }
+  TotalPriceSum;
+
+}
