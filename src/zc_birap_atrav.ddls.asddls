@@ -16,9 +16,13 @@ define root view entity ZC_BIRAP_ATRAV
   @Search.fuzzinessThreshold: 0.90
   key TravelID,
   @Search.defaultSearchElement: true
-  @ObjectModel.text.element: [ 'AgencyName' ]
-  @Consumption.valueHelpDefinition: [{ entity : { name: '/DMO/I_Agency_StdVH', element: 'AgencyID' } }]
+  @UI.textArrangement: #TEXT_ONLY
+//  @ObjectModel.text.element: [ 'AgencyName' ]
+  @ObjectModel.text.element: [ 'AgencyDisplay' ]
+  @Consumption.valueHelpDefinition: [{ entity : { name: 'ZI_Agency_StdVH', element: 'AgencyID' } }]
+//  @Consumption.valueHelpDefinition: [{ entity : { name: '/DMO/I_Agency_StdVH', element: 'AgencyID' } }]
   AgencyID,
+  AgencyDisplay,
   _Agency.Name as AgencyName,
   @Search.defaultSearchElement: true
   @ObjectModel.text.element: [ 'CustomerName' ]

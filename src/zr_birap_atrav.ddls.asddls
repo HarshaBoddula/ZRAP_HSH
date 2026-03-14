@@ -11,8 +11,12 @@ define root view entity ZR_BIRAP_ATRAV
 {
   key travel_id as TravelID,
   agency_id as AgencyID,
+  cast( concat( cast(agency_id as abap.char(6)) , concat( '-', _Agency.Name ) ) as abap.char( 256 ) ) as AgencyDisplay,
+//  cast( concat( concat( cast(agency_id as abap.char(6)) , cast('-' as abap.char(1)) ) , cast(_Agency.Name as abap.char(20) )  as abap.string( 256 ) ) as AgencyDisplay,
+//  concat( concat( agency_id, '-' ) , _Agency.Name )
+//  cast( concat( concat( agency_id, '-' ) , _Agency.Name ) as abap.string(256) )   as AgencyDisplay,
   customer_id as CustomerID,
-  begin_date as BeginDate,
+  begin_date as BeginDate,  
   end_date as EndDate,
   @Semantics.amount.currencyCode: 'CurrencyCode'
   booking_fee as BookingFee,

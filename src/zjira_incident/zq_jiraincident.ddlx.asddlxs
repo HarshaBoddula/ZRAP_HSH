@@ -1,0 +1,28 @@
+@Metadata.layer: #CORE
+annotate entity ZQ_JiraIncident
+    with 
+{
+    /* === Selection Fields (Filters + Visual Filters) === */
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem: [{ position: 20 }]
+  priority;
+
+  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem: [{ position: 30 }]
+  status;
+
+  @UI.selectionField: [{ position: 30 }]
+  @UI.lineItem: [{ position: 40 }]
+  assignment_group;
+
+  @UI.selectionField: [{ position: 40 }]
+  application;
+
+  /* === Table Columns === */
+  @UI.lineItem: [{ position: 10 }]
+  short_text;
+
+  @UI.lineItem: [{ position: 50 }]
+  assignee;
+    
+}
