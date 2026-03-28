@@ -1,4 +1,88 @@
 @Metadata.layer: #CORE
+@UI.selectionPresentationVariant: [{
+    qualifier: 'Default',
+    presentationVariantQualifier: 'Default'
+//    selectionVariantQualifier: 'Default'
+ },
+ { qualifier: 'SVKPIINCIDENT', 
+ presentationVariantQualifier: 'SVKPIINCIDENT', 
+ selectionVariantQualifier: 'SVKPIINCIDENT' }]
+@UI.chart: [{
+   qualifier: 'ChartDefault',
+   chartType: #COLUMN_STACKED,
+   dimensions: ['assignment_group'],
+   measures: ['incident_age_hrs'],
+   dimensionAttributes: [{
+       dimension: 'assignment_group',
+       role: #SERIES
+    }],
+   measureAttributes: [{
+       measure: 'incident_age_hrs',
+       role: #AXIS_1
+    }]
+ }, {
+  qualifier: 'chartPriority',
+    chartType: #LINE,
+    title: 'Incident Age by Priority',
+    measures: ['incident_age_hrs'],
+  dimensions: ['priority'],
+    dimensionAttributes: [{ dimension: 'priority', role: #CATEGORY }],
+    measureAttributes: [{ measure: 'incident_age_hrs', role: #AXIS_1, asDataPoint: true }]
+}, 
+{
+  qualifier: 'chartSLA',
+    chartType: #DONUT,
+    title: 'SLA Status Overview',
+    description: 'Flight Data',
+    dimensions: ['sla_status'],
+    measures: ['incident_age_hrs'],
+    dimensionAttributes: [{ dimension: 'sla_status', role: #SERIES}],
+    measureAttributes: [{ measure: 'incident_age_hrs', role: #AXIS_1, asDataPoint: true }] 
+}]
+@UI.presentationVariant: [{
+   qualifier: 'Default',
+   visualizations: [{
+       type: #AS_CHART,
+       qualifier: 'ChartDefault'
+   }]
+},
+{ 
+    qualifier: 'PVPriority',
+   visualizations: [{
+       type: #AS_CHART,
+       qualifier: 'chartPriority'
+   }]
+},
+{ 
+    qualifier: 'PVSLA',
+   visualizations: [{
+       type: #AS_CHART,
+       qualifier: 'chartSLA'
+   }]
+},{
+  qualifier: 'SVKPIINCIDENT',
+  text: 'KPI by SVKPIINCIDENT',
+  visualizations: [
+    { type: #AS_CHART, qualifier: 'chartPriority' },
+    { type: #AS_DATAPOINT, qualifier: 'incident_age_hrs' }
+  ]
+}
+]
+//@UI.selectionVariant: [{
+//  qualifier: 'BreachedSLA',
+//  filter: 
+//  parameters: [{ name: 'sla_status', value: 'BREACHED' }]
+//}]
+
+//KPI
+@UI.selectionVariant: [
+  {
+    qualifier: 'SVKPIINCIDENT',
+    text: 'KPI by Priority'
+  }
+]
+
+
 annotate entity ZQ_JiraIncident
     with 
 {
@@ -24,5 +108,32 @@ annotate entity ZQ_JiraIncident
 
   @UI.lineItem: [{ position: 50 }]
   assignee;
+  @UI.selectionField: [{ position: 60 }]
+  sla_status;
+  @UI.dataPoint: { qualifier: 'incident_age',criticalityCalculation.improvementDirection: #MAXIMIZE, criticalityCalculation.constantThresholds: [{acceptanceRangeLowValue: 5500 , deviationRangeLowValue: 100}] }
+  @UI.selectionField: [{ position: 70 }]
+  incident_age_hrs;
+  @UI.dataPoint: {
+  qualifier: 'DP1',
+  title: 'Breached SLAs',
+  criticality: 'incident_cnt' 
+}
+
+//@UI.kpi: [
+//  {
+//    selectionVariantQualifier: 'SVForQuantity',
+//    id: 'ActualCostByGLAccountNameKPI',
+//    dataPoint.title: 'Define datapoint inline',
+//    dataPoint.minimumValue: 2,
+//    detail: {
+//      semanticObject: 'EPMProduct',
+//      semanticObjectAction: 'manage_stta',
+//      defaultPresentationVariantQualifier: 'PVForQuantity'
+//    },
+//    qualifier: 'KPIQuantity'
+//  }
+//]
+
+    incident_cnt;
     
 }

@@ -43,6 +43,8 @@ define root view entity ZR_BIRAP_ATRAV
   @Semantics.mimeType: true
   mime_type as MimeType,
   file_name as FileName,
+//  @Semantics.systemDateTime.createdAt: true
+//  creation_date as CreationDate,
   @Semantics.user.createdBy: true
   created_by as CreatedBy,
   @Semantics.systemDateTime.createdAt: true
@@ -52,8 +54,17 @@ define root view entity ZR_BIRAP_ATRAV
   @Semantics.systemDateTime.localInstanceLastChangedAt: true
   last_changed_at as LastChangedAt,
   @Semantics.systemDateTime.lastChangedAt: true
-  local_last_changed_at as LocalLastChangedAt,
-  
+  local_last_changed_at as LocalLastChangedAt,     
+   cast( substring( cast( created_at as abap.char(30) ), 1, 8 ) as abap.dats ) as created_date,
+   cast( case
+   when cast( dats_days_between(  cast( substring( cast( created_at as abap.char(30) ), 1, 8 ) as abap.dats ), $session.system_date ) as abap.int2) = 0
+   then 'TODAY'
+   when cast( dats_days_between(  cast( substring( cast( created_at as abap.char(30) ), 1, 8 ) as abap.dats ), $session.system_date ) as abap.int2) <= 10
+   then 'WITHIN10D'
+   when cast( dats_days_between(  cast( substring( cast( created_at as abap.char(30) ), 1, 8 ) as abap.dats ), $session.system_date ) as abap.int2) > 10
+   then 'OLDER'
+   end as abap.char(10) )
+    as Status,
   _Agency,
   _Customer,
   _Currency,

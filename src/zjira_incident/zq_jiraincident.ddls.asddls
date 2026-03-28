@@ -34,9 +34,12 @@ define view entity ZQ_JiraIncident
   @UI.lineItem: [{ position: 50 }]
   assignee,
 
-  @UI.lineItem: [{ position: 60 }]
+  @UI.lineItem: [{ position: 60, criticality: 'sla_criticality' }]
   sla_status,
-
+  @DefaultAggregation: #SUM
   @UI.lineItem: [{ position: 70 }]
-  incident_age_hrs
+  incident_age_hrs,
+  @DefaultAggregation: #SUM
+  incident_cnt,
+  sla_criticality
 }

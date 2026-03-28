@@ -1,0 +1,4 @@
+@EndUserText.label: 'Jira incident Serviec Definition'
+define service ZSD_JIRAINCIDENT {
+  expose ZQ_JiraIncident as JiraIncident;
+}

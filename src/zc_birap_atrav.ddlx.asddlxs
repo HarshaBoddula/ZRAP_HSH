@@ -10,6 +10,14 @@
         }
     }
 }
+//@UI.selectionVariant: [{
+//  qualifier: 'DefaultToday',
+//  
+//  
+//text: 'Today',
+//  filter: "Status EQ 'TODAY'"
+//  }]
+
 annotate view ZC_BIRAP_ATRAV with
 {
   @UI.facet: [ {
@@ -28,6 +36,7 @@ annotate view ZC_BIRAP_ATRAV with
   @UI.selectionField: [ {
     position: 10 
   } ]
+//  @Consumption.defaultValue: '1'
   TravelID;
   
   @UI.identification: [ {
@@ -128,6 +137,18 @@ annotate view ZC_BIRAP_ATRAV with
     position: 110, label: 'Total Travel Days'
   } ]
   traveldays;
+  @UI.identification: [ {
+    position: 180, label: 'Creationdate'
+  } ]
+  CreationDate;
+  @UI.lineItem: [ {
+    position: 1 
+  }] 
+  @UI.identification: [ {
+    position: 190, label: 'Status'
+  } ]
+  @UI.selectionField: [{ position: 100 }]
+  Status;
   
   @UI.hidden: true
   MimeType;

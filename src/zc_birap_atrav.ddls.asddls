@@ -69,6 +69,18 @@ define root view entity ZC_BIRAP_ATRAV
   
   @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZBI_CL_CALC'
   virtual traveldays: abap.int1,
+  created_date as CreationDate,
+  @Consumption.valueHelpDefinition: [{ entity : { name: 'ZI_STATUSTRAVEL_VH', element: 'Status' } }]
+//  @Consumption.defaultValue: 'TODAY'
+    @Consumption.filter.defaultValue: 'WITHIN10D'
+  Status,
+  
+//  @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZBI_CL_CALC'
+//  virtual CreationDate : abap.dats,
+//  @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZBI_CL_CALC'
+//  @Consumption.valueHelpDefinition: [{ entity : { name: 'ZI_STATUSTRAVEL_VH', element: 'staus' } }]
+//  virtual Status: abap.char( 10 ),
+
   @Semantics: {
     user.createdBy: true
   }
@@ -89,5 +101,22 @@ define root view entity ZC_BIRAP_ATRAV
     systemDateTime.lastChangedAt: true
   }
   LocalLastChangedAt,
+ 
+
+//    cast( CreatedAt as abap.char(30) ) as created_date,
+//  substring( CreatedAt, 0, 8 ) as date,
+  
+//  tstmp_to_dats( CreatedAt, $session.user_timezone, $session.client, 'NULL' ) AS created_date,
+  
+//TSTMP_TO_DATS(
+//      CreatedAt,
+//      abap_system_timezone( $session.client, 'NULL' ),
+//      $session.client,
+//      'NULL'
+//  ) as created_date,
+  
+  
+//  case 
+//  when dats_from_datn( CreatedAt, 'NULL' ) = $se
   _BaseEntity
 }

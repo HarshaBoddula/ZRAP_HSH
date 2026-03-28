@@ -26,15 +26,51 @@ CLASS ZBI_CL_CALC IMPLEMENTATION.
       EXIT.
     ENDIF.
 
+    DATA lt_travel_orginal_Data TYPE STANDARD TABLE OF zc_birap_atrav WITH DEFAULT KEY.
+    lt_travel_orginal_Data = CORRESPONDING #( it_original_data ).
     LOOP AT it_requested_calc_elements ASSIGNING FIELD-SYMBOL(<fs_req_calc_elements>).
+
 
       CASE <fs_req_calc_elements>.
         WHEN 'TRAVELDAYS'.
-          DATA lt_travel_orginal_Data TYPE STANDARD TABLE OF zc_birap_atrav WITH DEFAULT KEY.
-          lt_travel_orginal_Data = CORRESPONDING #( it_original_data ).
+*          DATA lt_travel_orginal_Data TYPE STANDARD TABLE OF zc_birap_atrav WITH DEFAULT KEY.
+*          lt_travel_orginal_Data = CORRESPONDING #( it_original_data ).
 
           LOOP AT lt_travel_orginal_data ASSIGNING FIELD-SYMBOL(<fs_travel_orginal_Data>).
                     <fs_travel_orginal_data> = zbi_cl_calc=>calculate_days_to_flight( is_orginal_data = <fs_travel_orginal_data> ).
+          ENDLOOP.
+          ct_calculated_data = CORRESPONDING #( lt_travel_orginal_data ).
+
+        whEN 'CREATIONDATE'.
+*          lt_travel_orginal_Data = CORRESPONDING #( it_original_data ).
+
+          LOOP AT lt_travel_orginal_data ASSIGNING FIELD-SYMBOL(<fs_travel_orginal_Data1>).
+                    <fs_travel_orginal_Data1>-CreationDate = substring(
+                                                               val   = CONV STRING( <fs_travel_orginal_Data1>-CreatedAt )
+*                                                               sub   =
+*                                                               regex =
+*                                                               pcre  =
+*                                                               occ   =
+                                                               off   = 0
+                                                               len   = 8
+*                                                               case  =
+                                                             ).
+*                    <fs_travel_orginal_data1> = zbi_cl_calc=>calculate_days_to_flight( is_orginal_data = <fs_travel_orginal_data> ).
+          ENDLOOP.
+          ct_calculated_data = CORRESPONDING #( lt_travel_orginal_data ).
+
+          whEN 'STATUS'.
+*          lt_travel_orginal_Data = CORRESPONDING #( it_original_data ).
+
+          LOOP AT lt_travel_orginal_data ASSIGNING FIELD-SYMBOL(<fs_travel_orginal_Data2>).
+                    <fs_travel_orginal_Data2>-Status = coND #( WHEN <fs_travel_orginal_Data2>-CreationDate = cl_abap_context_info=>get_system_date( )
+                                                        thEN 'TODAY'
+                                                        when cl_abap_context_info=>get_system_date( ) - <fs_travel_orginal_Data2>-CreationDate <= 10
+                                                        tHEN 'WITHIN10D'
+                                                        whEN cl_abap_context_info=>get_system_date( ) - <fs_travel_orginal_Data2>-CreationDate > 10
+                                                        then 'OLDER' ).
+
+*                    <fs_travel_orginal_data1> = zbi_cl_calc=>calculate_days_to_flight( is_orginal_data = <fs_travel_orginal_data> ).
           ENDLOOP.
           ct_calculated_data = CORRESPONDING #( lt_travel_orginal_data ).
 
