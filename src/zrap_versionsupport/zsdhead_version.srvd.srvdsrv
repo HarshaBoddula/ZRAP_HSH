@@ -1,0 +1,7 @@
+@EndUserText.label: 'Service definition'
+define service ZSDHEAD_VERSION {
+  expose ZCHEAD_VERSION     as head;
+  expose ZClineitem_VERSION as lineitem;
+  expose ZTEST_LINE;
+  expose zitesttable;
+}

@@ -1,0 +1,63 @@
+managed implementation in class zbp_itest_head unique ;
+strict ( 2 );
+with draft;
+
+
+define behavior for zi_itest_head
+  persistent table ztest_head
+  draft table ztest_head_d
+  lock master
+  total etag local_last_changed_at
+  early numbering
+//  with unmanaged save
+//  with additional save
+  authorization master (instance)
+{
+  create;
+  update;
+  delete;
+
+  association _item { create; with draft; }
+
+  determination create_default_items on modify{ create; }
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ztest_head {
+    description = description;
+    headid = headid;
+    attachment = attachment;
+    filename = filename;
+    mimetype = mimetype;
+  }
+}
+
+define behavior for zi_itest_item
+//  persistent table ztest_itms
+  draft table ztest_itms_d
+  lock dependent by _head
+  authorization dependent by _head
+  early numbering
+  with unmanaged save
+{
+//  create;
+  update;
+  delete;
+  determination set_item_ids on modify{ create; }
+
+  field ( readonly ) headid, itemuuid;
+  association _head{with draft;}
+  mapping for ztest_itms {
+    headid   = headid;
+    itemid   = itemid;
+    itemuuid = itemuuid;
+    quarter  = quarter;
+    version  = version;
+    amount   = amount;
+    waers    = waers;
+  }
+}

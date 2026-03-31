@@ -1,0 +1,5 @@
+@EndUserText.label: 'ZSDTEST_VERSIONING'
+define service ZSDTEST_VERSIONING {
+  expose ZC_ITEST_HEAD;
+  expose zc_itest_item;
+}

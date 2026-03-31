@@ -1,0 +1,32 @@
+@Metadata.layer: #CORE
+annotate entity ZClineitem_VERSION
+    with 
+{
+//    Id;
+    @UI.lineItem: [{ position: 10, label: 'Version' }]
+    Version;
+    @UI.lineItem: [{ position: 20, label: 'Quarter' }]
+    Quarter;
+    @UI.lineItem: [{ position: 30, label: 'FiscalYear' }]
+    FiscalYear;
+    @UI.lineItem: [{ position: 40, label: 'Owner' }]
+    Owner;
+    @UI.lineItem: [{ position: 50, label: 'OwningBusiness' }]
+    OwningBusiness;
+    @UI.lineItem: [{ position: 60, label: 'Name' }]
+    Name;
+    @UI.lineItem: [{ position: 70, label: 'Forcast' }]
+    Forecast;
+    @UI.lineItem: [{ position: 80, label: 'Waers' }]
+    Waers;
+    @UI.lineItem: [{ position: 90, label: 'Created at' }]
+    CreatedAt;
+    @UI.lineItem: [{ position: 100, label: 'Created by' }]
+    CreatedBy;
+    @UI.lineItem: [{ position: 110, label: 'Last Changed at' }]
+    LastChangedAt;
+    @UI.lineItem: [{ position: 120, label: 'Last changed by' }]
+    LastChangedBy;
+    /* Associations */
+//    _Header;
+}

@@ -1,0 +1,20 @@
+@Metadata.layer: #CORE
+annotate entity ZCHEAD_VERSION
+    with 
+{
+    @UI.facet: [{  label: 'Lineitem Data',          id: 'Data',           type: #LINEITEM_REFERENCE,       position: 10,  targetElement: '_Details', purpose: #STANDARD }]
+    @UI.lineItem: [{ position : 10 }]
+    Id;
+    @UI.lineItem: [{ position : 20 }]
+    Name;
+    @UI.lineItem: [{ position : 30 }]
+    CreatedAt;
+    @UI.lineItem: [{ position : 40 }]
+    CreatedBy;
+    @UI.lineItem: [{ position : 50 }]
+    LastChangedAt;
+    @UI.lineItem: [{ position : 60 }]
+    LastChangedBy;
+
+    
+}

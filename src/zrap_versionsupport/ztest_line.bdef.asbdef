@@ -1,0 +1,30 @@
+managed implementation in class zbp_test_line unique;
+strict ( 2 );
+
+define behavior for ZTEST_LINE //alias <alias_name>
+persistent table zlineitm_version
+lock master
+authorization master ( global, instance )
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+  field ( readonly ) Id, Version, Quarter, FiscalYear;
+
+  mapping for zlineitm_version {
+    Id = id;
+    Name = name;
+    Owner = owner;
+    OwningBusiness = owning_business;
+    Quarter = quarter;
+    Version = version;
+    CreatedAt = created_at;
+    CreatedBy = created_by;
+    FiscalYear = fiscal_year;
+    Forecast = forecast;
+    LastChangedAt = last_changed_at;
+    LastChangedBy = last_changed_by;
+    Waers = waers;
+  }
+}

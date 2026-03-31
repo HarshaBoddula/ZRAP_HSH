@@ -1,0 +1,37 @@
+managed implementation in class zbp_ihead_version unique;
+strict ( 2 );
+
+define behavior for ZIHEAD_VERSION //alias <alias_name>
+persistent table zhead_version
+lock master
+authorization master ( instance )
+etag master LastChangedAt
+{
+  create (authorization : global);
+  update;
+  delete;
+//  field ( readonly ) Id;
+  association _Details { create; }
+
+  mapping for ZHEAD_VERSION {
+    Name = name;
+    Id = id;
+    CreatedAt = created_at;
+    CreatedBy = created_by;
+    LastChangedAt = last_changed_at;
+    LastChangedBy = last_changed_by;
+
+  }
+}
+
+define behavior for ZIlineitem_VERSION //alias <alias_name>
+persistent table zlineitm_version
+lock dependent by _Header
+authorization dependent by _Header
+etag master LastChangedAt
+{
+  update;
+  delete;
+  field ( readonly ) Id; //Version, Quarter, FiscalYear;
+  association _Header;
+}
