@@ -6,11 +6,13 @@ annotate entity ZC_ITEST_HEAD
 /* ========= FACETS ========= */
   @UI.facet: [
     {
+      position: 10,
       id: 'Header',
       type: #IDENTIFICATION_REFERENCE,
       label: 'Header Details'
     },
     {
+       position: 20,
       id: 'Items',
       type: #LINEITEM_REFERENCE,
       targetElement: '_item',
@@ -32,13 +34,13 @@ annotate entity ZC_ITEST_HEAD
   attachment;
   @UI.lineItem: [{ position: 40, type:#FOR_ACTION,
     label: 'Release',
-    dataAction: 'changeProgress',
+    dataAction: 'release',
     inline: true,
     emphasized: true,
     importance: #HIGH }]
     @UI.identification: [{ position: 40, type:#FOR_ACTION,
     label: 'Release',
-    dataAction: 'changeProgress',
+    dataAction: 'release',
     inline: true,
     emphasized: true,
     importance: #HIGH }]

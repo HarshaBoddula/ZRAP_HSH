@@ -1,4 +1,18 @@
 @Metadata.layer: #CORE
+
+@UI.presentationVariant: [{
+  sortOrder: [
+    { by: 'version_sort_rank', direction: #ASC },
+    
+    { by: 'version', direction: #ASC },
+    
+    { by: 'quarter', direction: #ASC },
+    { by: 'itemid', direction: #ASC }
+    
+  ],
+  groupBy: [ 'version' ]
+}]
+
 annotate entity zc_itest_item
     with 
 {

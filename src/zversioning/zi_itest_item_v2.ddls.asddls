@@ -1,9 +1,7 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'ITest Item'
-define view entity zi_itest_item
+define root view entity ZI_ITEST_ITEM_v2
   as select from ztest_itms
-  association to parent zi_itest_head as _head
-    on $projection.headid = _head.headid
 {
   key itemuuid,          
 
@@ -20,15 +18,10 @@ case
   when version <> 'V1' then 1
   else 0
 end as is_history,
-    case
-  when version = 'V1' then cast( 0 as abap.int4 )
-  else cast( 1 as abap.int4 )
-end as version_sort_rank,
   
   created_by,
     created_at,
     last_changed_by,
     last_changed_at,
-    local_last_changed_at,
-  _head
+    local_last_changed_at
 }

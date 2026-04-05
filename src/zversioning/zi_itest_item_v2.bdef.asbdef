@@ -1,0 +1,24 @@
+managed implementation in class zbp_i_itest_item_v2 unique;
+strict ( 2 );
+
+define behavior for ZI_ITEST_ITEM_v2 //alias <alias_name>
+persistent table ztest_itms
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly ) itemuuid;
+
+  mapping for ztest_itms {
+    headid   = headid;
+    itemid   = itemid;
+    itemuuid = itemuuid;
+    quarter  = quarter;
+    version  = version;
+    amount   = amount;
+    waers    = waers;
+  }
+}

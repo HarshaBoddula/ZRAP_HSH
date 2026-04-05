@@ -1,5 +1,6 @@
 CLASS lsc_zi_itest_head DEFINITION INHERITING FROM cl_abap_behavior_saver.
 
+
   PROTECTED SECTION.
 
     METHODS save_modified REDEFINITION.
@@ -20,6 +21,7 @@ CLASS lsc_zi_itest_head IMPLEMENTATION.
         ls_itm type ztest_itms,
         lt_itm type STANDARD TABLE OF ztest_itms.
 
+if zbp_itest_head=>gv_release is inITIAL.
   "Process UPDATED items from the request
   LOOP AT update-zi_itest_item INTO data(ls_upd1).
 
@@ -86,6 +88,7 @@ CLASS lsc_zi_itest_head IMPLEMENTATION.
     "IMPORTANT: do NOT UPDATE the original V1 row -> it remains unchanged
 
   ENDLOOP.
+  endif.
 
 ENDMETHOD.
 
@@ -284,6 +287,8 @@ CLASS lhc_zi_itest_item DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS set_item_ids FOR DETERMINE ON MODIFY
       IMPORTING keys FOR zi_itest_item~set_item_ids.
+    METHODS get_instance_features FOR INSTANCE FEATURES
+      IMPORTING keys REQUEST requested_features FOR zi_itest_item RESULT result.
 
 ENDCLASS.
 
@@ -388,6 +393,73 @@ CLASS lhc_zi_itest_item IMPLEMENTATION.
 
 ENDMETHOD.
 
+  METHOD get_instance_features.
+
+  DATA lt_items TYPE TABLE FOR READ RESULT zi_itest_item.
+
+  "Read item instances
+  READ ENTITIES OF zi_itest_head IN LOCAL MODE
+    ENTITY zi_itest_item
+    ALL FIELDS
+    WITH CORRESPONDING #( keys )
+    RESULT lt_items.
+
+    looP AT lt_items into data(ls_item1).
+        if ls_item1-version <> 'V1'.
+            APPEND VALUE #( %tky = ls_item1-%tky
+                            %field-amount = if_abap_behv=>fc-f-read_only
+
+                            %field-waers  = if_abap_behv=>fc-f-read_only
+                            %field-quarter = if_abap_behv=>fc-f-read_only
+                            %field-version = if_abap_behv=>fc-f-read_only
+                            %field-itemid  = if_abap_behv=>fc-f-read_only
+                            %field-is_history = if_abap_behv=>fc-f-read_only
+                            %field-created_by = if_abap_behv=>fc-f-read_only
+                            %field-created_at  = if_abap_behv=>fc-f-read_only
+                            %field-last_changed_by = if_abap_behv=>fc-f-read_only
+                            %field-last_changed_at = if_abap_behv=>fc-f-read_only
+                            %field-local_last_changed_at = if_abap_behv=>fc-f-read_only
+                             ) to result.
+        ELSE.
+            APPEND VALUE #( %tky = ls_item1-%tky
+                            %field-amount = if_abap_behv=>fc-f-unrestricted
+                            %field-waers  = if_abap_behv=>fc-f-unrestricted
+                            %field-quarter = if_abap_behv=>fc-f-unrestricted
+                            %field-version = if_abap_behv=>fc-f-unrestricted
+*                            %field-itemid  = if_abap_behv=>fc-f-unrestricted
+                            %field-is_history = if_abap_behv=>fc-f-unrestricted
+                            %field-created_by = if_abap_behv=>fc-f-unrestricted
+                            %field-created_at  = if_abap_behv=>fc-f-unrestricted
+                            %field-last_changed_by = if_abap_behv=>fc-f-unrestricted
+                            %field-last_changed_at = if_abap_behv=>fc-f-unrestricted
+                            %field-local_last_changed_at = if_abap_behv=>fc-f-unrestricted
+                             ) to result.
+        ENDIF.
+    endLOOP.
+
+*  result = VALUE #(
+*    FOR ls_item IN lt_items (
+*      %tky = ls_item-%tky
+*
+*      "----------------------------------------
+*      " Allow UPDATE only for V1
+*      "----------------------------------------
+*      %features-%field-amount =
+*        COND if_abap_behv=>t_xflag(
+*          WHEN ls_item-version = 'V1'
+*          THEN if_abap_behv=>fc-o-enabled
+*          ELSE if_abap_behv=>fc-o-disabled
+*        )
+*
+*      "----------------------------------------
+*      " Disallow DELETE for all versions
+*      "----------------------------------------
+**      %features-%delete = if_abap_behv=>fc-o-disabled
+*    )
+*  ).
+
+ENDMETHOD.
+
 ENDCLASS.
 
 CLASS lhc_zi_itest_head DEFINITION INHERITING FROM cl_abap_behavior_handler.
@@ -401,6 +473,8 @@ CLASS lhc_zi_itest_head DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS create_default_items FOR DETERMINE ON MODIFY
       IMPORTING keys FOR zi_itest_head~create_default_items.
+    METHODS release FOR MODIFY
+      IMPORTING keys FOR ACTION zi_itest_head~release RESULT result.
     METHODS earlynumbering_create FOR NUMBERING
       IMPORTING entities FOR CREATE zi_itest_head.
 
@@ -829,5 +903,245 @@ ENDMETHOD.
 *  ENDLOOP.
 *
 *ENDMETHOD.
+
+  METHOD release.
+
+
+  DATA: lt_items     TYPE STANDARD TABLE OF ztest_itms,
+*        ls_v1        TYPE ztest_itms,
+*        ls_latest_v2 TYPE ztest_itms,
+        lv_max_v2    TYPE ztest_itms-version,
+        lt_update    TYPE TABLE FOR UPDATE zi_itest_item,
+        ls_update    TYPE STRUCTURE FOR UPDATE zi_itest_item,
+        lt_update_new    TYPE TABLE FOR UPDATE zi_itest_item_v2,
+        ls_update_new    TYPE STRUCTURE FOR UPDATE zi_itest_item_v2.
+
+    DATA lt_head TYPE TABLE FOR READ RESULT zi_itest_head.
+
+
+
+
+
+
+READ ENTITIES OF zi_itest_head IN LOCAL MODE
+  ENTITY zi_itest_head
+  ALL FIELDS
+  WITH CORRESPONDING #( keys )
+  RESULT lt_head.
+
+*  DATA lt_items TYPE TABLE FOR READ RESULT zi_itest_item.
+
+READ ENTITIES OF zi_itest_head IN LOCAL MODE
+  ENTITY zi_itest_head BY \_item
+  ALL FIELDS
+  WITH VALUE #(
+    FOR ls_head IN lt_head (
+      %tky = ls_head-%tky
+    )
+  )
+  RESULT data(lt_items1).
+
+  "------------------------------------------------------------
+" Update V1 with latest V2.x values (per headid, itemid, quarter)
+"------------------------------------------------------------
+
+*DATA: lt_update TYPE TABLE FOR UPDATE zi_itest_item,
+*      ls_update TYPE STRUCTURE FOR UPDATE zi_itest_item.
+
+LOOP AT lt_items1 INTO DATA(ls_any)
+     GROUP BY (
+       headid  = ls_any-headid
+       itemid  = ls_any-itemid
+       quarter = ls_any-quarter
+     ) INTO DATA(grp).
+
+DATA: ls_v1        LIKE LINE OF lt_items1,
+      ls_latest_v2 LIKE LINE OF lt_items1.
+
+  CLEAR: ls_v1, ls_latest_v2, lv_max_v2.
+
+  "----------------------------------------
+  " Find V1 and latest V2.x in this group
+  "----------------------------------------
+  LOOP AT GROUP grp INTO DATA(ls_row).
+
+    IF ls_row-version = 'V1'.
+      ls_v1 = ls_row.
+    ENDIF.
+
+    IF ls_row-version CP 'V2.*'.
+      IF lv_max_v2 IS INITIAL OR ls_row-version > lv_max_v2.
+        lv_max_v2    = ls_row-version.
+        ls_latest_v2 = ls_row.
+      ENDIF.
+    ENDIF.
+
+  ENDLOOP.
+
+  "----------------------------------------
+  " If either V1 or V2 is missing → skip
+  "----------------------------------------
+  IF ls_v1-itemuuid IS INITIAL OR ls_latest_v2-itemuuid IS INITIAL.
+    CONTINUE.
+  ENDIF.
+
+  "----------------------------------------
+  " Update V1 with latest V2.x values
+  "----------------------------------------
+  CLEAR ls_update.
+  ls_update-%tky = ls_v1-%tky.
+  ls_update-amount = ls_latest_v2-amount.
+  ls_update-waers  = ls_latest_v2-waers.
+  ls_update-%control-amount = if_abap_behv=>mk-on.
+  ls_update-%control-waers  = if_abap_behv=>mk-on.
+
+  APPEND ls_update TO lt_update.
+
+ENDLOOP.
+
+"------------------------------------------------------------
+" Apply updates
+"------------------------------------------------------------
+IF lt_update IS NOT INITIAL.
+
+   MOVE-CORRESPONDING lt_update TO lt_update_new.
+   MODIFY ENTITIES OF ZI_ITEST_ITEM_v2
+    ENTITY ZI_ITEST_ITEM_v2
+    UPDATE from lt_update_new
+    FAILED   DATA(failed1)
+    REPORTED DATA(reported1).
+
+    zbp_itest_head=>gv_release = 'X'.
+
+   MODIFY ENTITIES OF zi_itest_head IN LOCAL MODE
+    ENTITY zi_itest_item
+    UPDATE FIELDS ( amount waers )
+    WITH lt_update
+    FAILED   DATA(failed2)
+    REPORTED DATA(reported2).
+
+    READ ENTITIES OF zi_itest_head IN LOCAL MODE
+  ENTITY zi_itest_head
+  ALL FIELDS
+  WITH CORRESPONDING #( keys )
+  RESULT lt_head.
+
+  result = vaLUE #( for ls_head in lt_head ( %tky = ls_head-%tky %param = ls_head ) ).
+
+*READ ENTITIES OF zi_itest_head IN LOCAL MODE
+*  ENTITY zi_itest_head BY \_item
+*  ALL FIELDS
+*  WITH VALUE #(
+*    FOR ls_head IN lt_head (
+*      %tky = ls_head-%tky
+*    )
+*  )
+*  RESULT DATA(lt_items_refreshed).
+*
+*result = VALUE #(
+*  FOR ls_item IN lt_items_refreshed (
+*    %tky   = ls_item-%tky
+*    %param = ls_item
+*  )
+*).
+
+
+*   loop AT lt_update_new inTO data()
+*  MODIFY ENTITIES OF zi_itest_head IN LOCAL MODE
+*    ENTITY zi_itest_item
+*    UPDATE FIELDS ( amount waers )
+*    WITH lt_update
+*    FAILED   DATA(failed1)
+*    REPORTED DATA(reported1).
+ENDIF.
+
+
+*  "Read all items of the header (draft-aware)
+*  READ ENTITIES OF zi_itest_head IN LOCAL MODE
+*    ENTITY zi_itest_head
+*    ALL FIELDS
+*    WITH CORRESPONDING #( keys )
+*    RESULT DATA(lt_all_items).
+
+*  READ ENTITIES OF zi_itest_head IN LOCAL MODE
+*    ENTITY zi_itest_item
+*    ALL FIELDS
+*    WITH CORRESPONDING #( keys )
+*    RESULT DATA(lt_all_items).
+*
+*  "Group by HEADID + QUARTER
+*  LOOP AT lt_all_items INTO DATA(ls_any)
+*       GROUP BY ( headid = ls_any-headid
+*                  quarter = ls_any-quarter
+*                  version = ls_any-version
+*                  itemid = ls_any-itemid ) INTO DATA(group).
+*
+**    CLEAR: ls_v1, ls_latest_v2, lv_max_v2.
+*    CLEAR:  lv_max_v2.
+*
+*    "Find V1 and latest V2.x
+*    LOOP AT GROUP group INTO DATA(ls_row).
+*
+*
+*      IF ls_row-version = 'V1'.
+*        data(ls_v1) =  ls_row.
+*      ENDIF.
+*
+*      IF ls_row-version CP 'V2.*'.
+*        IF ls_row-version > lv_max_v2.
+*          lv_max_v2    = ls_row-version.
+*          data(ls_latest_v2) = ls_row.
+*        ENDIF.
+*      ENDIF.
+*
+*    ENDLOOP.
+*
+*    "If no V2 exists, nothing to release
+*    IF ls_latest_v2-itemuuid IS INITIAL.
+*      CONTINUE.
+*    ENDIF.
+*
+*    "------------------------------------
+*    "1) Update V1 with latest V2 values
+*    "------------------------------------
+*    CLEAR ls_update.
+*    ls_update-%tky = ls_v1-%tky.
+*    ls_update-amount = ls_latest_v2-amount.
+*    ls_update-waers  = ls_latest_v2-waers.
+*    ls_update-%control-amount = if_abap_behv=>mk-on.
+*    ls_update-%control-waers  = if_abap_behv=>mk-on.
+*
+*    APPEND ls_update TO lt_update.
+*
+*    "------------------------------------
+*    "2) Mark all V2 rows as history
+*    "------------------------------------
+**    LOOP AT GROUP group INTO ls_row
+**         WHERE ls_row-version CP 'V2.*'.
+**
+**      CLEAR ls_update.
+**      ls_update-%tky = ls_row-%tky.
+**      ls_update-is_history = abap_true.
+**      ls_update-%control-is_history = if_abap_behv=>mk-on.
+**      APPEND ls_update TO lt_update.
+**
+**    ENDLOOP.
+*
+*  ENDLOOP.
+*
+*  "------------------------------------
+*  "Apply updates
+*  "------------------------------------
+*  IF lt_update IS NOT INITIAL.
+*    MODIFY ENTITIES OF zi_itest_head IN LOCAL MODE
+*      ENTITY zi_itest_item
+*      UPDATE FIELDS ( amount waers is_history )
+*      WITH lt_update
+*      FAILED   DATA(failed1)
+*      REPORTED DATA(reported1).
+*  ENDIF.
+
+
+  ENDMETHOD.
 
 ENDCLASS.

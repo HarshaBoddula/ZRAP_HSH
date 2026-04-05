@@ -2,4 +2,5 @@
 define service ZSDTEST_VERSIONING {
   expose ZC_ITEST_HEAD;
   expose zc_itest_item;
+  expose ZI_ITEST_ITEM_v2;
 }

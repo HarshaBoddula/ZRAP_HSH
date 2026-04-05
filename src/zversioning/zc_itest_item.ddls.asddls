@@ -18,6 +18,9 @@ is_history,
     last_changed_by,
     last_changed_at,
     local_last_changed_at,
+    
+    version_sort_rank,
+    
     /* Associations */
     _head: redirected to parent ZC_ITEST_HEAD
 }

@@ -18,8 +18,13 @@ define behavior for zi_itest_head
   delete;
 
   association _item { create; with draft; }
+   side effects { action release affects entity _item; }
+  action release result[1] $self ;
+//     action release deep result[1] zi_itest_head;
+  action (features : instance) ReleaseVersion parameter /dmo/a_travel_discount result[1] $self;
 
   determination create_default_items on modify{ create; }
+
 
   draft action Edit;
   draft action Activate;
@@ -50,6 +55,8 @@ define behavior for zi_itest_item
   determination set_item_ids on modify{ create; }
 
   field ( readonly ) headid, itemuuid;
+
+    field ( features : instance ) amount, created_at, created_by, is_history, itemid, quarter, version, waers, last_changed_at, last_changed_by, local_last_changed_at;
   association _head{with draft;}
   mapping for ztest_itms {
     headid   = headid;
